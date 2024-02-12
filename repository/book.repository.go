@@ -50,11 +50,14 @@ func (repo *BookRepositoryImpl) Delete(id uint) (*gorm.DB, error) {
 	return repo.db.Delete(book), nil
 }
 
-func (repo *BookRepositoryImpl) Get(id uint) (*gorm.DB, error) {
-	result := repo.db.Table("Books").Find(id)
+func (repo *BookRepositoryImpl) Get(id uint) (models.Books, error) {
+	var book models.Books
 
-	if result != nil {
+	err := repo.db.Model(models.Books{Id: id}).First(&book)
+
+	if err.Error != nil {
 		panic("Livro não localizado")
 	}
-	return nil, nil
+	
+	return book, nil
 }
